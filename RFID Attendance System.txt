@@ -1,22 +1,24 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <string.h>
-#define F_CPU 8000000UL
-#include <avr/lcd4.h>
-unsigned char tag1[]="";
-unsigned char tag2[]="";
-unsigned char tag3[]="";
-unsigned char tag4[]="";
+#define F_CPU 8000000UL//Frequency of the master clock to be set to 8MHz for USART
+#include <avr/lcd4.h>//calling header file of LCD used to display the message.The header file used has been attached.
+unsigned char tag1[]="";//array for 1st tag
+unsigned char tag2[]="";//array for 2nd tag
+unsigned char tag3[]="";//array for 3rd tag
+unsigned char tag4[]="";//array for 4th tag
 char user[];//array for the tag to be entered
+char store[];//to store attendance
+int k=0;
 unsigned char i=0;
 int number=0;//number of students entered
-void usartini()
+void usartini()//initiallizing USART in Atmega16
 {
 	UCSRB|=(1<<RXEN);
 	UCSRC|=(1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
 	UBRRL=51;
 }
-void rx()
+void rx()//recieving data through USART
 {
 	for(i=0;i<12;i++)
 	{
@@ -26,31 +28,39 @@ void rx()
 	user[i]='\0';
 	lcdstring(&user[0]);
 }
-void rfid_check()
+void rfid_check()//To Match address of entered Tag to existing addresses
 {
 	if(strcmp(tag1,user)==0)
 	{
 		lcdcmd(0x94);
 		lcdstring("Match found");
 		number++;
+		store[k]='1';
+		k++;
 	}
 	if(strcmp(tag2,user)==0)
 	{
 		lcdcmd(0x94);
 		lcdstring("Match found");
 		number++;
+		store[k]='2';
+		k++;
 	}
 	if(strcmp(tag3,user)==0)
 	{
 		lcdcmd(0x94);
 		lcdstring("Match found");
 		number++;
+		store[k]='3';
+		k++;
 	}
 	if(strcmp(tag4,user)==0)
 	{
 		lcdcmd(0x94);
 		lcdstring("Match found");
 		number++;
+		store[k]='4';
+		k++;
 	}
 	lcdcmd(0xd0);
 	lcdstring("Students=");
@@ -58,7 +68,7 @@ void rfid_check()
 }
 void main()
 {
-	lcdini();
+	lcdini();//initiallising LCD
 	usartini();
 	lcdcmd(0x80);
 	lcdstring("RFID based");
