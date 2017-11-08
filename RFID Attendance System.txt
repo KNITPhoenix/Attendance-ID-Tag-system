@@ -9,7 +9,7 @@ unsigned char tag3[]="";//array for 3rd tag
 unsigned char tag4[]="";//array for 4th tag
 char user[];//array for the tag to be entered
 char store[];//to store attendance
-int k=0;
+int k=0;//to count number of students
 unsigned char i=0;
 int number=0;//number of students entered
 void usartini()//initiallizing USART in Atmega16
